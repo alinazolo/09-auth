@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: "Note Hub",
     images: [
       {
-        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+        url: 'https://08-zustand-blond-two.vercel.app/',
         width: 600,
         height: 600,
         alt: "note hub image",

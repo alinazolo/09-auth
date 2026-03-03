@@ -9,9 +9,9 @@ import Pagination from "@/components/Pagination/Pagination";
 import NoteList from '@/components/NoteList/NoteList';
 import Loading from '@/app/loading';
 import Error from '@/app/notes/filter/[...slug]/error';
-import Modal from "@/components/Modal/Modal";
-import NoteForm from '@/components/NoteForm/NoteForm';
 import type { NoteTag } from "@/types/note";
+import Link from "next/link";
+
 
 interface NotesClientProps {
   tag: NoteTag | "all";
@@ -40,9 +40,6 @@ setCurrentPage(1);
         refetchOnMount: false,
     });
     
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
 
     return (
         <>
@@ -51,16 +48,11 @@ setCurrentPage(1);
             {isSuccess && (
     <Pagination page={currentPage} totalPages={data.totalPages} onPageChange={setCurrentPage}/>
                     )}
-                    <button className={css.button} onClick={openModal}>Create note +</button>
-                    {isModalOpen && (
-<Modal onClose={closeModal}>
-<NoteForm onClose={closeModal}></NoteForm>
-</Modal>
-)}
+                    <Link className={css.button} href="/notes/action/create">Create note +</Link>
 </header>
   {isLoading && <Loading/>}
-                {error && <Error error={error} />}
-                 {data && isSuccess && data.notes.length > 0 && <NoteList notes={data.notes}/>}
+  {error && <Error error={error} />}
+  {data && isSuccess && data.notes.length > 0 && <NoteList notes={data.notes}/>}
              </div>
         </>
     )

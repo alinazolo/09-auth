@@ -15,3 +15,9 @@ export const tags: NoteTag[] = [
   "Shopping",
   "Meeting",
 ];
+
+export interface CreateNoteData{
+   title: string,
+  content: string,
+  tag: string,
+}
