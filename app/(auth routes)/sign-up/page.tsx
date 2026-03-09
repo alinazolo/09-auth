@@ -1,57 +1,67 @@
 "use client";
 
-import { register, RegisterRequest } from "@/lib/api/clientApi";
-import useAuthStore, { AuthState } from "@/lib/store/authStore";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+
 import css from "./SignUpPage.module.css";
 
-export default function SignUpPage(){
+import type { RegisterRequest } from "@/types/auth";
+import { register } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
+
+export default function SignUpPage() {
   const router = useRouter();
-  const setUser = useAuthStore((s: AuthState) => s.setUser);
   const [error, setError] = useState("");
+  const setUser = useAuthStore((state) => state.setUser);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError("");
-    const fd = new FormData(e.currentTarget);
-    const payload: RegisterRequest = {
-      email: String(fd.get("email") ?? ""),
-      password: String(fd.get("password") ?? ""),
-    };
-
+  const handleSubmit = async (formData: FormData) => {
     try {
-      const user = await register(payload);
-      setUser(user);
-      router.push("/profile");
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      setError(message || "Registration failed");
+      const formValues = Object.fromEntries(
+        formData.entries(),
+      ) as unknown as RegisterRequest;
+
+      const response = await register(formValues);
+
+      if (response) {
+        setUser(response);
+        router.push("/profile");
+      } else {
+        setError("Invalid email or password");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Oops... some error");
+      }
     }
   };
-
-  useEffect(() => {
-    document.title = `Sign-up | NoteHub`;
-    document
-      .querySelector('meta[name="description"]')
-      ?.setAttribute(
-        "content",
-        `Create a new account on NoteHub. Sign up with your email and password to get started.`
-      );
-  }, []);
 
   return (
     <main className={css.mainContent}>
       <h1 className={css.formTitle}>Sign up</h1>
-      <form className={css.form} onSubmit={handleSubmit}>
+
+      <form className={css.form} action={handleSubmit}>
         <div className={css.formGroup}>
           <label htmlFor="email">Email</label>
-          <input id="email" type="email" name="email" className={css.input} required />
+          <input
+            id="email"
+            type="email"
+            name="email"
+            className={css.input}
+            required
+          />
         </div>
 
         <div className={css.formGroup}>
           <label htmlFor="password">Password</label>
-          <input id="password" type="password" name="password" className={css.input} required />
+          <input
+            id="password"
+            type="password"
+            name="password"
+            className={css.input}
+            required
+          />
         </div>
 
         <div className={css.actions}>
@@ -59,9 +69,9 @@ export default function SignUpPage(){
             Register
           </button>
         </div>
-
-        <p className={css.error}>{error}</p>
       </form>
+
+      {error && <p className={css.error}>{error}</p>}
     </main>
   );
 }

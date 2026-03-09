@@ -1,5 +1,5 @@
 'use client'
-import { fetchNotes } from "@/lib/api/api";
+import { fetchNotes } from "@/lib/api/clientApi";
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import css from './page.module.css';
 import { useState } from "react";
@@ -48,14 +48,18 @@ export default function NotesClient({ tag }: NotesClientProps) {
         <>
             <div className={css.app}>
                 <header className={css.toolbar}> <SearchBox text={inputValue} onSearch={handleSearch} />
-            {isSuccess && (
-    <Pagination page={currentPage} totalPages={data.totalPages} onPageChange={setCurrentPage}/>
-                    )}
+            {data && (
+  <Pagination
+    page={currentPage}
+    totalPages={data.totalPages}
+    onPageChange={setCurrentPage}
+  />
+)}
                     <Link className={css.button} href="/notes/action/create">Create note +</Link>
 </header>
   {isLoading && <Loading/>}
   {isError && <Error/>}
-  {data && isSuccess && data.notes.length > 0 && <NoteList notes={data.notes}/>}
+  {data && isSuccess && data?.notes?.length > 0 && <NoteList notes={data.notes}/>}
              </div>
         </>
     )

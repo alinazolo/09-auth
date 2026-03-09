@@ -1,44 +1,43 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { login } from "@/lib/api/clientApi";
+import { LoginRequest } from "@/types/auth";
+import { useAuthStore } from "@/lib/store/authStore";
 import css from "./SignInPage.module.css";
-import { login, LoginRequest } from "@/lib/api/clientApi";
-import useAuthStore, { AuthState } from "@/lib//store/authStore";
 
 export default function SignInPage(){
   const router = useRouter();
-  const setUser = useAuthStore((s: AuthState) => s.setUser);
-  const [error, setError] = useState("");
+    const [error, setError] = useState("");
+    const setUser = useAuthStore((state) => state.setUser);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError("");
-    const fd = new FormData(e.currentTarget);
-    const payload: LoginRequest = {
-      email: String(fd.get("email") ?? ""),
-      password: String(fd.get("password") ?? ""),
-    };
+  const handleSubmit = async (formData: FormData) => {
+    const formValues = Object.fromEntries(formData) as unknown as LoginRequest;
 
     try {
-      const user = await login(payload);
-      setUser(user);
-      router.push("/profile");
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      setError(message || "Authentication failed");
+      const response = await login(formValues);
+
+      if (response) {
+        setUser(response);
+        router.push("/profile");
+      } else {
+        setError("Invalid email or password");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Oops... some error");
+      }
     }
   };
 
-  useEffect(() => {
-    document.title = "Sign-in | NoteHub";
-  }, []);
-
   return (
     <main className={css.mainContent}>
-      <form className={css.form} onSubmit={handleSubmit}>
-        <h1 className={css.formTitle}>Sign in</h1>
+      <h1 className={css.formTitle}>Sign in</h1>
 
+      <form className={css.form} action={handleSubmit}>
         <div className={css.formGroup}>
           <label htmlFor="email">Email</label>
           <input id="email" type="email" name="email" className={css.input} required />
@@ -54,9 +53,9 @@ export default function SignInPage(){
             Log in
           </button>
         </div>
-
-        <p className={css.error}>{error}</p>
       </form>
+
+      {error && <p className={css.error}>{error}</p>}
     </main>
   );
 }

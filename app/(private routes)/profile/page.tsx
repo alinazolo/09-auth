@@ -1,37 +1,68 @@
-export const metadata = {
-  title: "Profile | NoteHub",
-  description: "User profile page — view and edit your profile.",
-};
-
+import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import { getServerMe } from "@/lib/api/serverApi";
 import css from "./ProfilePage.module.css";
 
-export default function ProfilePage() {
-  return (
-    <main className={css.mainContent}>
-      <div className={css.profileCard}>
-        <div className={css.header}>
-          <h1 className={css.formTitle}>Profile Page</h1>
-          <a href="#" className={css.editProfileButton}>
-            Edit Profile
-          </a>
-        </div>
+export async function generateMetadata(): Promise<Metadata> {
+  const user = await getServerMe();
 
-        <div className={css.avatarWrapper}>
-          <Image
-            src="https://ac.goit.global/avatar-placeholder.png"
-            alt="User Avatar"
-            width={120}
-            height={120}
-            className={css.avatar}
-          />
-        </div>
+  if (!user) {
+    return {
+      title: "Profile",
+      description: "User profile page",
+    };
+  }
+
+  return {
+    title: `${user.username} | Profile`,
+    description: `${user.username}'s profile page`,
+  };
+}
+
+
+export default async function ProfilePage() {
+  const user = await getServerMe();
+
+  if (!user) {
+    return (
+      <div className={css.mainContent}>
+        <section className={css.profileCard}>
+          <h1 className={css.formTitle}>My Profile</h1>
+          <p>User not found</p>
+        </section>
+      </div>
+    );
+  }
+
+  return (
+    <div className={css.mainContent}>
+      <section className={css.profileCard}>
+        <h1 className={css.formTitle}>My Profile</h1>
 
         <div className={css.profileInfo}>
-          <p>Username: your_username</p>
-          <p>Email: your_email@example.com</p>
+          <div className={css.avatar}>
+            <Image
+              src={user.avatar || "/user-defaul-photo.webp"}
+              width={300}
+              height={300}
+              alt="Avatar"
+            />
+          </div>
+
+          <h2>Name: {user.username}</h2>
+          <h2>Email: {user.email}</h2>
+
+          <p>
+            Some description: Lorem ipsum dolor sit amet consectetur adipisicing
+            elit...
+          </p>
         </div>
-      </div>
-    </main>
+
+        <Link href="/profile/edit" className={css.editProfileButton}>
+          Edit profile
+        </Link>
+      </section>
+    </div>
   );
 }
