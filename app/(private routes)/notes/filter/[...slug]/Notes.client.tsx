@@ -1,5 +1,5 @@
 'use client'
-import { fetchNotes } from "@/lib/api";
+import { fetchNotes } from "@/lib/api/api";
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import css from './page.module.css';
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { useDebouncedCallback } from "use-debounce";
 import Pagination from "@/components/Pagination/Pagination";
 import NoteList from '@/components/NoteList/NoteList';
 import Loading from '@/app/loading';
-import Error from '@/app/notes/filter/[...slug]/error';
+import Error from '@/app/(private routes)/notes/filter/[...slug]/error';
 import type { NoteTag } from "@/types/note";
 import Link from "next/link";
 

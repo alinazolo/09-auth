@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import css from "./NotePreview.module.css";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { fetchNoteById } from "@/lib/api";
+import { fetchNoteById } from "@/lib/api/api";
 import Loader from "@/components/Loader/Loader";
 import ErrorMessage from "@/components/Error/ErrorMessage";
 
