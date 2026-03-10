@@ -97,22 +97,19 @@ export async function refreshSession(
   refreshToken: string,
 ): Promise<RefreshResponse | null> {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
+    const cookieStore = await cookies();
+
+    const response = await nextServer.post<RefreshResponse>(
+      "/auth/refresh",
+      { refreshToken },
       {
-        method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
         },
-        body: JSON.stringify({ refreshToken }),
       },
     );
 
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = (await response.json()) as RefreshResponse;
+    const data = response.data;
 
     if (!data.accessToken || !data.refreshToken) {
       return null;
