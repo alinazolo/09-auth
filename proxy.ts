@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const privateRoutes = ["/notes"];
+const privateRoutes = ["/notes/", "/notes/filter"];
 const publicRoutes = ["/sign-in", "/sign-up"];
 
 const ACCESS_TOKEN_COOKIE = "accessToken";
@@ -106,7 +106,7 @@ export async function proxy(request: NextRequest) {
 
   if (accessToken) {
     if (publicRoute) {
-      return NextResponse.redirect(new URL("/notes", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     }
 
     return NextResponse.next();
