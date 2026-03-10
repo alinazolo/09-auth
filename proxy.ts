@@ -117,7 +117,7 @@ export async function proxy(request: NextRequest) {
 
     if (newSession) {
       if (publicRoute) {
-        const response = NextResponse.redirect(new URL("/notes", request.url));
+        const response = NextResponse.redirect(new URL("/", request.url));
         setAuthCookies(
           response,
           newSession.accessToken,
