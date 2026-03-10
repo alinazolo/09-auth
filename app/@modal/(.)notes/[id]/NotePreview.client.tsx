@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import css from "./NotePreview.module.css";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { fetchNoteById } from "@/lib/api/api";
+import { fetchSingleNoteById } from "@/lib/api/clientApi";
 import Loader from "@/components/Loader/Loader";
 import ErrorMessage from "@/components/Error/ErrorMessage";
 
@@ -18,7 +18,7 @@ export default function NotePreviewClient() {
     
     const { data: note, isLoading, error, isSuccess } = useQuery({
         queryKey: ["note", id],
-        queryFn: () => fetchNoteById(id),
+        queryFn: () => fetchSingleNoteById(id),
         placeholderData: keepPreviousData,
         refetchOnMount: false,
     });
