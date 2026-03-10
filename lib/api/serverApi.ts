@@ -87,3 +87,39 @@ export async function fetchTags(): Promise<string[]> {
 
   return Array.from(tags);
 }
+
+type RefreshResponse = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+export async function refreshSession(
+  refreshToken: string,
+): Promise<RefreshResponse | null> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refreshToken }),
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = (await response.json()) as RefreshResponse;
+
+    if (!data.accessToken || !data.refreshToken) {
+      return null;
+    }
+
+    return data;
+  } catch {
+    return null;
+  }
+}
