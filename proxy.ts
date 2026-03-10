@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const privateRoutes = ["/notes/", "/notes/filter"];
+const privateRoutes = ["/notes/", "/notes/filter", "/profile"];
 const publicRoutes = ["/sign-in", "/sign-up"];
 
 const ACCESS_TOKEN_COOKIE = "accessToken";
@@ -142,5 +142,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/notes/:path*", "/sign-in", "/sign-up"],
+  matcher: ["/notes/:path*", "/profile/:path*", "/sign-in", "/sign-up"],
 };
