@@ -3,11 +3,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## NoteHub
 NoteHub is a simple and efficient application designed for managing personal notes. It helps keep your thoughts organized and accessible in one place, whether you are at home or on the go.
 
-Tech stack: TypeScript · Next.js · TanStack Query (React Query) · REST API · SSR/CSR · Dynamic Routes · Pagination · Responsive Web Design · Git · GitHub
+Role: Frontend Developer 
+
+Tech stack: TypeScript · Next.js (App Router) · TanStack Query (React Query) · Zustand · REST API · SSR/CSR · Dynamic Routes · Pagination · Responsive Web Design · Git · GitHub · CSS Modules · Authentication
 
 Key features & achievements:
+
 • Integrated REST API and implemented full CRUD functionality (create, read, update, delete)
 • Built data fetching and caching with TanStack Query for smoother UX and better performance
+• Configuring authentication with private and public routes
+• Added meta tags to improve the SEO of the site
+• Implementing global state in Next.js using the zustand library
 • Implemented both SSR and CSR approaches in Next.js for optimal loading and interaction
 • Added pagination for structured content browsing and scalable lists
 • Developed dynamic routes and app navigation for a clean user flow
